@@ -75,9 +75,14 @@ namespace TEngine
         public string AssemblyTextAssetExtension = ".bytes";
 
         /// <summary>
-        /// 程序集文本资产资源目录
+        /// 程序集文本资产资源目录（AOT）
         /// </summary>
-        public string AssemblyTextAssetPath = "AssetRaw/DLL";
+        public string AssemblyTextAsset2AOTPath = "AssetRaw/DLL/AOT";
+        
+        /// <summary>
+        /// 程序集文本资产资源目录(HotFix)
+        /// </summary>
+        public string AssemblyTextAsset2HotFixPath = "AssetRaw/DLL/HotFix";
 
         [Header("更新设置")]
         public UpdateStyle UpdateStyle = UpdateStyle.Force;

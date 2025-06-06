@@ -12,7 +12,7 @@ namespace TEngine.Editor
         {
             "TEngine.Runtime",
             "Assembly-CSharp",
-            "Launcher",
+            // "Launcher",
         };
 
         private static readonly string[] RuntimeOrEditorAssemblyNames =
@@ -21,7 +21,7 @@ namespace TEngine.Editor
             "Assembly-CSharp",
             "TEngine.Editor",
             "Assembly-CSharp-Editor",
-            "Launcher",
+            // "Launcher",
         };
 
         /// <summary>

@@ -258,8 +258,8 @@ namespace TEngine.Localization
             Application.OpenURL(LocalizeInspector.HelpURL_Documentation);
         }
         
-        private const string I2GlobalSourcesEditorFolderPath = "Assets/Editor/I2Localization";
-        private const string I2GlobalSourcesEditorPath = "Assets/Editor/I2Localization/I2Languages.asset";
+        private const string I2GlobalSourcesEditorFolderPath = "Assets/GameScripts/Editor/I2Localization";
+        private const string I2GlobalSourcesEditorPath = "Assets/GameScripts/Editor/I2Localization/I2Languages.asset";
 
         [MenuItem("Tools/I2 Localization/Open I2Languages.asset", false, 0)]
         public static void OpenGlobalSource()

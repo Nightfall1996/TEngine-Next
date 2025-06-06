@@ -232,6 +232,18 @@ namespace TEngine
             AssetDatabase.Refresh();
             BuildImp(BuildTargetGroup.iOS, BuildTarget.iOS, $"{Application.dataPath}/../Build/IOS/XCode_Project");
         }
+		
+		[MenuItem("TEngine/Build/一键打包Android（懒狗）", false, 30)]
+        public static void AutomationBuildAndroidEx()
+        {
+            BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
+            BuildDLLCommand.BuildAndCopyDlls(target);
+            AssetDatabase.Refresh();
+            BuildInternal(target, outputRoot: Application.dataPath + "/../Bundles", packageVersion: GetBuildPackageVersion());
+            AssetDatabase.Refresh();
+            BuildImp(BuildTargetGroup.Android, BuildTarget.Android, $"{Application.dataPath}/../Build/Android/{GetBuildPackageVersion()}Android.apk");
+            // BuildImp(BuildTargetGroup.Android, BuildTarget.Android, $"{Application.dataPath}/../Build/Android/Android.apk");
+        }
 
         public static void BuildImp(BuildTargetGroup buildTargetGroup, BuildTarget buildTarget, string locationPathName)
         {

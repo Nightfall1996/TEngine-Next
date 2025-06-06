@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0320e56ed14c4f7981ce8f4d27b13316, type: 3}
   m_Name: UpdateSetting
   m_EditorClassIdentifier: 
-  projectName: Demo
+  projectName: Knight
   HotUpdateAssemblies:
   - GameProto.dll
   - GameLogic.dll
@@ -23,6 +23,10 @@ MonoBehaviour:
   - TEngine.Runtime.dll
   - UniTask.dll
   - YooAsset.dll
+  - Exoa.TouchCameraPro.Common.dll
+  - Exoa.TouchCameraPro.Runtime.dll
+  - GridPlacement.Runtime.dll
+  - SuperScrollView.Runtime.dll
   LogicMainDllName: GameLogic.dll
   AssemblyTextAssetExtension: .bytes
   AssemblyTextAssetPath: AssetRaw/DLL
