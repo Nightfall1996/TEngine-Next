@@ -23,14 +23,21 @@ MonoBehaviour:
   - TEngine.Runtime.dll
   - UniTask.dll
   - YooAsset.dll
-  - Exoa.TouchCameraPro.Common.dll
-  - Exoa.TouchCameraPro.Runtime.dll
-  - GridPlacement.Runtime.dll
-  - SuperScrollView.Runtime.dll
   - UnityEngine.CoreModule.dll
+  - Unity.Entities
+  - Unity.Entities.Hybrid
+  - Unity.Collections
+  - Unity.Jobs
+  - Unity.Burst
+  - Unity.Transforms
+  - Unity.Transforms.Hybrid
+  - Unity.Mathematics
+  - Unity.Physics
+  - Unity.Scenes
   LogicMainDllName: GameLogic.dll
   AssemblyTextAssetExtension: .bytes
-  AssemblyTextAssetPath: AssetRaw/DLL
+  AssemblyTextAsset2AOTPath: AssetRaw/DLL/AOT
+  AssemblyTextAsset2HotFixPath: AssetRaw/DLL/HotFix
   UpdateStyle: 1
   UpdateNotice: 1
   ResDownLoadPath: http://127.0.0.1:8081
