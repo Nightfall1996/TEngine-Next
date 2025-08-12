@@ -2,6 +2,10 @@
 using HybridCLR.Editor;
 using HybridCLR.Editor.Commands;
 #endif
+using System.IO;
+using Obfuz.Settings;
+using Obfuz4HybridCLR;
+using System.Collections.Generic;
 using TEngine.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -9,12 +13,14 @@ using UnityEngine;
 public static class BuildDLLCommand
 {
     private const string EnableHybridClrScriptingDefineSymbol = "ENABLE_HYBRIDCLR";
+    private const string EnableObfuzScriptingDefineSymbol = "ENABLE_OBFUZ";
 
+    #region HybridCLR/Define Symbols
     /// <summary>
     /// 禁用HybridCLR宏定义。
     /// </summary>
     [MenuItem("HybridCLR/Define Symbols/Disable HybridCLR", false, 30)]
-    public static void Disable()
+    public static void DisableHybridCLR()
     {
         ScriptingDefineSymbols.RemoveScriptingDefineSymbol(EnableHybridClrScriptingDefineSymbol);
 #if ENABLE_HYBRIDCLR
@@ -27,7 +33,7 @@ public static class BuildDLLCommand
     /// 开启HybridCLR宏定义。
     /// </summary>
     [MenuItem("HybridCLR/Define Symbols/Enable HybridCLR", false, 31)]
-    public static void Enable()
+    public static void EnableHybridCLR()
     {
         ScriptingDefineSymbols.RemoveScriptingDefineSymbol(EnableHybridClrScriptingDefineSymbol);
         ScriptingDefineSymbols.AddScriptingDefineSymbol(EnableHybridClrScriptingDefineSymbol);
@@ -36,19 +42,45 @@ public static class BuildDLLCommand
         UpdateSettingEditor.ForceUpdateAssemblies();
 #endif
     }
-    
-    /// <summary>
+	
+	/// <summary>
     /// 强制同步Assemblies。
     /// </summary>
     [MenuItem("HybridCLR/Build/Force UpdateAssemblies", false, 30)]
-    public static void ForceUpdateAssemblies()
+    public static void ForceUpdateAssembliesHybridCLR()
     {
 #if ENABLE_HYBRIDCLR
         UpdateSettingEditor.ForceUpdateAssemblies();
 #endif
     }
+	
+    #endregion
+    
+    #region Obfuz/Define Symbols
+    /// <summary>
+    /// 禁用Obfuz宏定义。
+    /// </summary>
+    [MenuItem("Obfuz/Define Symbols/Disable Obfuz", false, 30)]
+    public static void DisableObfuz()
+    {
+        ScriptingDefineSymbols.RemoveScriptingDefineSymbol(EnableObfuzScriptingDefineSymbol);
+        ObfuzSettings.Instance.buildPipelineSettings.enable = false;
+    }
 
-    [MenuItem("HybridCLR/Build/BuildAssets And CopyTo AssemblyTextAssetPath", false, 31)]
+    /// <summary>
+    /// 开启Obfuz宏定义。
+    /// </summary>
+    [MenuItem("Obfuz/Define Symbols/Enable Obfuz", false, 31)]
+    public static void EnableObfuz()
+    {
+        ScriptingDefineSymbols.RemoveScriptingDefineSymbol(EnableObfuzScriptingDefineSymbol);
+        ScriptingDefineSymbols.AddScriptingDefineSymbol(EnableObfuzScriptingDefineSymbol);
+        ObfuzSettings.Instance.buildPipelineSettings.enable = true;
+    }
+    #endregion
+    
+
+    [MenuItem("HybridCLR/Build/BuildAssets And CopyTo AssemblyTextAssetPath")]
     public static void BuildAndCopyDlls()
     {
 #if ENABLE_HYBRIDCLR
@@ -72,6 +104,33 @@ public static class BuildDLLCommand
     {
         CopyAOTAssembliesToAssetPath();
         CopyHotUpdateAssembliesToAssetPath();
+        
+#if ENABLE_HYBRIDCLR && ENABLE_OBFUZ
+        CompileDllCommand.CompileDll(target);
+
+        string obfuscatedHotUpdateDllPath = PrebuildCommandExt.GetObfuscatedHotUpdateAssemblyOutputPath(target);
+        ObfuscateUtil.ObfuscateHotUpdateAssemblies(target, obfuscatedHotUpdateDllPath);
+
+        Directory.CreateDirectory(Application.streamingAssetsPath);
+
+        string hotUpdateDllPath = $"{SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target)}";
+        List<string> obfuscationRelativeAssemblyNames = ObfuzSettings.Instance.assemblySettings.GetObfuscationRelativeAssemblyNames();
+
+        foreach (string assName in SettingsUtil.HotUpdateAssemblyNamesIncludePreserved)
+        {
+            string srcDir = obfuscationRelativeAssemblyNames.Contains(assName) ? obfuscatedHotUpdateDllPath : hotUpdateDllPath;
+            string srcFile = $"{srcDir}/{assName}.dll";
+            
+            Debug.Log($"assName = {assName} && srcFile = {srcFile}");
+            string dstFile = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAsset2HotFixPath  + $"/{assName}.dll.bytes";
+            if (File.Exists(srcFile))
+            {
+                File.Copy(srcFile, dstFile, true);
+                Debug.Log($"[CompileAndObfuscate] Copy {srcFile} to {dstFile}");
+            }
+        }
+#endif
+        
         AssetDatabase.Refresh();
     }
 
